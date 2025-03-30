@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import AuthContext from "../../contexts/AuthContext";
 
 const Profile = () => {
+  const { isAuthenticated, setIsAuthenticated, setAuthUser } =
+    useContext(AuthContext);
+
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   const logout = async () => {
@@ -15,6 +19,8 @@ const Profile = () => {
         toast.error("Logout failed");
         return;
       }
+      setAuthUser(sending);
+      setIsAuthenticated(false);
       setUser(null);
       toast.success("Logout successfully");
 
@@ -40,8 +46,8 @@ const Profile = () => {
     }
   };
   useEffect(() => {
-    fetchData();
-  }, []);
+    isAuthenticated ? fetchData() : navigate("/login");
+  }, [isAuthenticated, navigate]);
 
   return (
     <div className="w-9/12 mx-auto mt-10 p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
@@ -50,14 +56,21 @@ const Profile = () => {
           {user?.fname} {user?.lname} Wellcome to our website
         </h5>
       </a>
-      <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-        <button onClick={logout} className="bg-red-500 text-white px-3 py-2">
-          Logout
-        </button>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero, quod
-        adipisci deserunt enim omnis veniam ipsum expedita? Laudantium est ipsum
-        cum atque sint magnam ullam cupiditate quae iure! Dolorem, sequi!
-      </p>
+      {isAuthenticated ? (
+        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+          <button onClick={logout} className="bg-red-500 text-white px-3 py-2">
+            Logout
+          </button>
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero, quod
+          adipisci deserunt enim omnis veniam ipsum expedita? Laudantium est
+          ipsum cum atque sint magnam ullam cupiditate quae iure! Dolorem,
+          sequi!
+        </p>
+      ) : (
+        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+          <p className="bg-red-500 text-white px-3 py-2">Please Login!</p>
+        </p>
+      )}
     </div>
   );
 };

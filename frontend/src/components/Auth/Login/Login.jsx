@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { TextInput } from "./../TextInput";
+import AuthContext from "../../../contexts/AuthContext";
 
 const Login = () => {
+    const {setAuthUser,setIsAuthenticated} = useContext(AuthContext)
   const navigate = useNavigate();
   const initialErrors = {
     email: "",
@@ -49,6 +51,8 @@ const Login = () => {
 
       console.log(sending);
       toast.success("Your are Login Successfully.");
+      setAuthUser(res)
+      setIsAuthenticated(true)
       navigate("/");
     } catch (error) {
       console.log("error : " + error);

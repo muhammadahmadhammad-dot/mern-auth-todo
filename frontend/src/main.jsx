@@ -9,7 +9,8 @@ import {
   RouterProvider,
 } from "react-router";
 import { ToastContainer } from "react-toastify";
-import {Profile, Layout, Register, Login} from "./components"
+import { Profile, Layout, Register, Login } from "./components";
+import AuthContextProvider from "./contexts/AuthContextProvider.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
@@ -23,9 +24,11 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router}>
-      <App />
-    </RouterProvider>
+    <AuthContextProvider>
+      <RouterProvider router={router}>
+        <App />
+      </RouterProvider>
+    </AuthContextProvider>
     <ToastContainer />
   </StrictMode>
 );
