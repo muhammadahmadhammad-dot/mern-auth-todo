@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-import router from "./routes/userRoutes.js";
+import userRouter from "./routes/userRoutes.js";
+import todoRouter from "./routes/todoRoutes.js";
 
 import cookieParser from "cookie-parser";
 
@@ -25,6 +26,7 @@ mongoose
   .then(() => console.log("DB is connected"))
   .catch((error) => console.log(error));
 
-app.use("/api", router);
+app.use("/api", userRouter);
+app.use("/api", todoRouter);
 
 app.listen(process.env.PORT, () => console.log("Server is running"));

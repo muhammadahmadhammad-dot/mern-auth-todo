@@ -1,59 +1,22 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect,useContext } from "react";
 import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
 import AuthContext from "../../contexts/AuthContext";
 
 const Profile = () => {
-  const { isAuthenticated, setIsAuthenticated, setAuthUser } =
-    useContext(AuthContext);
+  const { isAuthenticated, logout, authUser } = useContext(AuthContext);
 
   const navigate = useNavigate();
-  const [user, setUser] = useState({});
-  const logout = async () => {
-    try {
-      const sending = await fetch("http://localhost:3000/api/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-      if (!sending.ok) {
-        toast.error("Logout failed");
-        return;
-      }
-      setAuthUser(sending);
-      setIsAuthenticated(false);
-      setUser(null);
-      toast.success("Logout successfully");
-
-      navigate("/");
-    } catch (error) {
-      console.log("error : ", error);
-    }
-  };
-  const fetchData = async () => {
-    try {
-      const sending = await fetch("http://localhost:3000/api/profile", {
-        method: "GET",
-        credentials: "include",
-      });
-      const response = await sending.json();
-      if (!sending.ok) {
-        toast.error(response.error);
-        return;
-      }
-      setUser(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   useEffect(() => {
-    isAuthenticated ? fetchData() : navigate("/login");
-  }, [isAuthenticated, navigate]);
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated,navigate]);
 
   return (
     <div className="w-9/12 mx-auto mt-10 p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
       <a href="#">
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          {user?.fname} {user?.lname} Wellcome to our website
+          {authUser?.fname} {authUser?.lname} Wellcome to our website
         </h5>
       </a>
       {isAuthenticated ? (
